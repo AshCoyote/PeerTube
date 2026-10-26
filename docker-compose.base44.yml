@@ -73,13 +73,15 @@ services:
     # Dependencies are installed on startup, from the current lockfile, then the dev stack starts
     command: [ "sh", "-ec", "CI=true pnpm install --frozen-lockfile && exec sh docker/base44/dev-entrypoint.sh" ]
     healthcheck:
-      # Both components must answer: Angular client on :3000 and the API on :9000
+      # Both components must be usable: the Angular dev server serves its compiled bundle on
+      # :3000 (the index alone answers before the build finishes) and the API answers on :9000
       test:
         - "CMD-SHELL"
         - >-
           curl -fsS -o /dev/null http://127.0.0.1:3000/
+          && curl -fsS -o /dev/null http://127.0.0.1:3000/main.js
           && curl -fsS -o /dev/null http://127.0.0.1:9000/api/v1/config/about
-          || { echo "peerTube not ready (client :3000 or API :9000)"; exit 1; }
+          || { echo "PeerTube not ready (client bundle :3000 or API :9000)"; exit 1; }
       interval: 15s
       timeout: 10s
       retries: 20

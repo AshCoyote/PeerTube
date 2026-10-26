@@ -448,7 +448,14 @@ Non-obvious setup facts:
   public `3000-…` origin with `https: true`, so the absolute URLs PeerTube
   generates (thumbnails, avatars, HLS playlists…) go back through the port 3000
   proxy. With the flag unset, PeerTube keeps its normal `localhost:9000`
-  behaviour.
+  behaviour. `PEERTUBE_PUBLIC_HOST` must be exported *before* the `NODE_CONFIG`
+  JSON is built, otherwise the override silently misses and every generated URL
+  points at `localhost:9000`.
+- **Embed dev server.** `client/src/standalone/videos/vite.config.mjs` binds
+  `webserver.hostname` — the public preview host above, which cannot be bound
+  locally (`EADDRNOTAVAIL`, and `concurrently -k` then tears the whole dev stack
+  down). `scripts/dev/client.sh` therefore passes `--host 0.0.0.0` to it when
+  `BASE44_PREVIEW_MODE=1`.
 - **Preview host allowlist.** The Angular dev server (Vite) answers 403 to the
   preview proxy's `Host: <port>-<sandbox>.<domain>` unless allowed. The compose
   service receives the platform's `__VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS`
@@ -459,6 +466,14 @@ Non-obvious setup facts:
   `/client/assets` (mascots, default avatars) through that route. The entrypoint
   copies `client/src/assets` to `client/dist/assets` once, which is what keeps
   those images from 404ing in dev.
+- **Cold start.** The Angular dev server answers `GET /` immediately, but its
+  first bundle build takes ~30 s of all four sandbox CPUs; a page loaded during
+  that window is unresponsive until it finishes. Two measures cover it, both
+  active under the preview flag (`BASE44_PREVIEW_MODE=1`):
+  `dev-entrypoint.sh` warms `/main.js`, `/polyfills.js`, `/styles.css` and
+  `/api/v1/config/about` in the background as soon as :3000 answers, and the
+  compose healthcheck also probes `/main.js`, so the service only reports
+  healthy once the compiled client bundle is actually being served.
 - **pnpm store** lives in the `pnpm-store` volume (`store-dir=/pnpm-store`) so it
   does not create a `.pnpm-store` directory inside the bind-mounted repo.
 - **Dev credentials**: `root` / `test` (created automatically because

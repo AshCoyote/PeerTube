@@ -22,6 +22,9 @@ fi
 mkdir -p client/dist
 [ -d client/dist/assets ] || cp -r client/src/assets client/dist/assets
 
+# The override below reads PEERTUBE_PUBLIC_HOST from the environment, so export it first
+export PEERTUBE_PUBLIC_HOST
+
 # node-config overrides, merged on top of config/default.yaml + config/dev.yaml
 NODE_CONFIG="$(node -e '
 const override = {
@@ -37,7 +40,26 @@ process.stdout.write(JSON.stringify(override))
 ')"
 
 export NODE_CONFIG
-export PEERTUBE_PUBLIC_HOST
 export NODE_ENV=dev
+
+# Sandbox preview: the Angular dev client compiles/transforms the app on its first requests,
+# and that burst saturates every sandbox CPU, leaving a page that loads at that moment
+# unresponsive. Warm both servers in the background as soon as they answer so that work
+# happens before the first visitor (or the platform's preview check) connects.
+if [ "${BASE44_PREVIEW_MODE:-}" = "1" ]; then
+  (
+    i=0
+    while [ "$i" -lt 240 ]; do
+      curl -fsS -o /dev/null --max-time 10 http://127.0.0.1:3000/ 2>/dev/null && break
+      i=$((i + 1))
+      sleep 5
+    done
+
+    # /main.js and /polyfills.js are the compiled dev bundles: fetching them runs the build
+    for path in /main.js /polyfills.js /styles.css /api/v1/config/about; do
+      curl -fsS -o /dev/null --max-time 600 "http://127.0.0.1:3000${path}" 2>/dev/null || true
+    done
+  ) &
+fi
 
 exec npm run dev
