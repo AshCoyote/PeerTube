@@ -466,6 +466,9 @@ Non-obvious setup facts:
   `/client/assets` (mascots, default avatars) through that route. The entrypoint
   copies `client/src/assets` to `client/dist/assets` once, which is what keeps
   those images from 404ing in dev.
+- **Dynamic manifest.** PeerTube generates `/manifest.webmanifest` from its server
+  configuration. The Angular dev proxy must forward that route to :9000, otherwise
+  fresh preview loads receive a 404 instead of the PWA manifest.
 - **Cold start.** The Angular dev server answers `GET /` immediately, but its
   first bundle build takes ~30 s of all four sandbox CPUs; a page loaded during
   that window is unresponsive until it finishes. Two measures cover it, both
