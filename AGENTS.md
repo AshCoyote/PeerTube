@@ -393,6 +393,43 @@ Tracing and metrics are instrumented via `@opentelemetry/*` packages.
 Export to Jaeger (tracing) or Prometheus (metrics) is configurable in
 `config/default.yaml` under the `open_telemetry` key.
 
+## Base44 Dev Environment (docker compose)
+
+The sandbox stack is `docker-compose.base44.yml` (`Dockerfile.base44` is the app image):
+`docker compose -f docker-compose.base44.yml up -d --build`.
+
+- `app` runs the repository's own `scripts/dev/index.sh` (Angular dev server on `0.0.0.0:3000`
+  proxying `/api`, `/static`, `/socket.io`… to the Express API on `127.0.0.1:9000` inside the
+  same container, as `client/proxy.config.json` expects). Sources are bind-mounted, so client
+  edits hot-reload and server edits restart through `tsc-watch`. Node dependencies are installed
+  from the lockfile on container start (`pnpm install --frozen-lockfile`), stored in the
+  `pnpm-store` volume.
+- `postgres` (`peertube`/`peertube`, database `peertube_dev` — `NODE_ENV=dev` appends the
+  `database.suffix` `_dev`) and `redis` are plain services. Migrations and the initial `root`
+  admin run on server start. **Dev credentials: `root` / `test`.**
+- No external service credentials are needed: `config/dev.yaml` sets a dev `secrets.peertube`
+  and disables SMTP (`smtp.hostname: null`), so email features are inert.
+- `NODE_CONFIG` (compose `environment:`) overrides `config/dev.yaml`'s `127.0.0.1` database/redis
+  hostnames with the compose service names. Do not add a `config/local-*.json`; it is gitignored
+  and would only exist in one sandbox.
+- Non-obvious quirks worth knowing:
+  - `scripts/dev/server.sh --skip-client` copies `client/src/locale` into `client/dist` but not the
+    assets, while the server serves `/client/assets/*` from `client/dist`. The compose command
+    copies `client/src/assets` there before starting.
+  - The Angular dev server runs on Vite, which rejects the proxied preview `Host` header. The
+    platform-supplied `__VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS` variable is passed through in
+    compose; Vite appends it to `allowedHosts`. No application config is changed.
+  - `pnpm install` warns that the `ip-set` build script was ignored (not listed in
+    `onlyBuiltDependencies`); harmless for the dev server.
+  - `scripts/dev/index.sh` starts `client.sh` with `sh`, not `bash`, even though it has a bash
+    shebang — so `client.sh` must stay POSIX-compatible (no arrays). `BASE44_PREVIEW_MODE=1`
+    keeps the standalone embed dev server out; any other value runs the original three commands.
+  - Absolute URLs (favicon, logo, avatars, thumbnails) are built from `webserver.hostname:port`,
+    which is why `NODE_CONFIG` points it at `3000-$BASE44_PUBLIC_HOST_SUFFIX:443`.
+- Verify: `curl -fsS http://localhost:3000/` (Angular shell) and
+  `curl -fsS http://localhost:3000/api/v1/config` (proxied API). The compose healthcheck checks
+  both `:3000` and `:9000` on every container.
+
 ## Further Reading
 
 - [support/doc/development/server.md](support/doc/development/server.md)
