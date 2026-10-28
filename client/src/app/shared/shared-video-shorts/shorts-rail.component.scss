@@ -1,0 +1,69 @@
+@use '_variables' as *;
+
+.shorts-rail {
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+.shorts-rail-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+
+  h2 {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+}
+
+.shorts-rail-see-all {
+  font-size: 0.9rem;
+}
+
+.shorts-rail-list {
+  display: flex;
+  gap: 0.75rem;
+  padding-bottom: 0.5rem;
+  overflow-x: auto;
+}
+
+.shorts-rail-item {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 150px;
+  color: pvar(--fg);
+  text-decoration: none;
+}
+
+.shorts-rail-thumb {
+  position: relative;
+  display: block;
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  background-color: #000;
+  border-radius: 10px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.shorts-rail-name {
+  display: -webkit-box;
+  overflow: hidden;
+  font-weight: $font-bold;
+  line-height: 1.3;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.shorts-rail-channel {
+  color: pvar(--fg);
+  font-size: 0.85rem;
+  opacity: 0.7;
+}

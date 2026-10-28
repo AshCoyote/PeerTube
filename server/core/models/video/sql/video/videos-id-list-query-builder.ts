@@ -59,6 +59,7 @@ export type BuildVideosListQueryOptions = {
 
   host?: string
   isLive?: boolean
+  isShort?: boolean
   isLocal?: boolean
   include?: VideoIncludeType
   includeScheduledLive?: boolean
@@ -329,6 +330,12 @@ export class VideosIdListQueryBuilder extends AbstractRunQuery {
       this.whereLive()
     } else if (options.isLive === false) {
       this.whereVOD()
+    }
+
+    if (options.isShort === true) {
+      this.whereShort()
+    } else if (options.isShort === false) {
+      this.whereNotShort()
     }
 
     if (options.categoryOneOf) {
@@ -798,6 +805,14 @@ export class VideosIdListQueryBuilder extends AbstractRunQuery {
 
   private whereVOD () {
     this.and.push('"video"."isLive" IS FALSE')
+  }
+
+  private whereShort () {
+    this.and.push('"video"."isShort" IS TRUE')
+  }
+
+  private whereNotShort () {
+    this.and.push('"video"."isShort" IS FALSE')
   }
 
   private whereNotBlocked (serverAccountId: number, user?: MUserAccountId) {

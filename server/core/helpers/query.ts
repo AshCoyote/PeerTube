@@ -15,6 +15,7 @@ function pickCommonVideoQuery (query: VideosCommonQueryAfterSanitize) {
     'nsfwFlagsIncluded',
     'nsfwFlagsExcluded',
     'isLive',
+    'isShort',
     'includeScheduledLive',
     'categoryOneOf',
     'licenceOneOf',

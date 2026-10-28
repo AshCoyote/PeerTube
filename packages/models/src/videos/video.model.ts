@@ -37,6 +37,7 @@ export interface Video extends Partial<VideoAdditionalAttributes> {
   aspectRatio: number | null
 
   isLive: boolean
+  isShort: boolean
   liveSchedules?: LiveVideoScheduleEdit[]
 
   /**

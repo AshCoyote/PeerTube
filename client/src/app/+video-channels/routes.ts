@@ -36,6 +36,13 @@ export default [
         }
       },
       {
+        path: 'shorts',
+        component: VideoChannelVideosComponent,
+        data: {
+          shortsOnly: true
+        }
+      },
+      {
         path: 'video-playlists',
         component: VideoChannelPlaylistsComponent
       }

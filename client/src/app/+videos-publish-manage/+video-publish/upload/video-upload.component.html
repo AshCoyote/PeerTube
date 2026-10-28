@@ -3,6 +3,21 @@
     <div class="first-step-block">
       <my-global-icon class="upload-icon" iconName="upload" aria-hidden="true"></my-global-icon>
 
+      <div class="form-group form-group-type">
+        <label i18n for="first-step-type">Video type</label>
+
+        <select class="form-control" id="first-step-type" [(ngModel)]="firstStepIsShort" name="firstStepType">
+          <option [ngValue]="false" i18n>Regular video</option>
+          <option [ngValue]="true" i18n>Short</option>
+        </select>
+
+        @if (firstStepIsShort) {
+          <div class="form-group-hint" i18n>
+            Shorts are vertical videos shown on the homepage and in your channel's Shorts tab. Pick your clip, then fill in its details.
+          </div>
+        }
+      </div>
+
       <div class="button-file primary-button form-control" [ngbTooltip]="'(extensions: ' + getVideoExtensions() + ')'">
         <span i18n>Select the file to upload</span>
         <input

@@ -102,6 +102,11 @@ const routes: Routes = [
     loadChildren: () => import('./+search/routes'),
     canActivateChild: [ MetaGuard ]
   },
+  {
+    path: 'shorts',
+    loadChildren: () => import('./+shorts/routes'),
+    canActivateChild: [ MetaGuard ]
+  },
 
   // ---------------------------------------------------------------------------
 

@@ -138,6 +138,7 @@ export function videoModelToFormattedJSON (video: MVideoFormattable, options: Vi
     originallyPublishedAt: video.originallyPublishedAt,
 
     isLive: video.isLive,
+    isShort: video.isShort,
 
     account: video.VideoChannel.Account.toFormattedSummaryJSON(),
     channel: video.VideoChannel.toFormattedSummaryJSON(),

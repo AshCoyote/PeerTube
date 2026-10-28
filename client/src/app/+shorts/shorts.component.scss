@@ -1,0 +1,38 @@
+@use '_variables' as *;
+
+.shorts-container {
+  height: calc(100vh - #{pvar(--header-height)});
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.short-item {
+  height: 100%;
+  scroll-snap-align: start;
+}
+
+.shorts-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+}
+
+.shorts-empty {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  text-align: center;
+
+  my-global-icon {
+    opacity: 0.5;
+  }
+}

@@ -1,0 +1,24 @@
+@if (shorts.length !== 0) {
+  <section class="shorts-rail">
+    <div class="shorts-rail-header">
+      <h2 i18n>Shorts</h2>
+
+      <a class="shorts-rail-see-all" routerLink="/shorts" i18n>See all</a>
+    </div>
+
+    <div class="shorts-rail-list">
+      @for (short of shorts; track short.uuid) {
+        <a class="shorts-rail-item" routerLink="/shorts" [queryParams]="{ start: short.uuid }">
+          <span class="shorts-rail-thumb">
+            @if (getThumbnailUrl(short)) {
+              <img [src]="getThumbnailUrl(short)" alt="" loading="lazy">
+            }
+          </span>
+
+          <span class="shorts-rail-name">{{ short.name }}</span>
+          <span class="shorts-rail-channel">&#64;{{ short.byVideoChannel }}</span>
+        </a>
+      }
+    </div>
+  </section>
+}

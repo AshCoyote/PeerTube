@@ -376,6 +376,7 @@ export class LocalVideoCreator {
       support: videoInfo.support,
       privacy,
       isLive: videoInfo.isLive,
+      isShort: videoInfo.isShort || false,
       channelId: channel.id,
       originallyPublishedAt: videoInfo.originallyPublishedAt
         ? new Date(videoInfo.originallyPublishedAt)

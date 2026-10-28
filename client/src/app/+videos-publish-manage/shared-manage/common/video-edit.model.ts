@@ -88,7 +88,7 @@ type EmbedPrivacyForm = {
 
 // ---------------------------------------------------------------------------
 
-type LoadFromPublishOptions = Required<Pick<VideoCreate, 'channelId' | 'support'>> & Partial<Pick<VideoCreate, 'name'>> & {
+type LoadFromPublishOptions = Required<Pick<VideoCreate, 'channelId' | 'support'>> & Partial<Pick<VideoCreate, 'name' | 'isShort'>> & {
   channelName: string
   channelDisplayName: string
   user: AuthUser
@@ -160,6 +160,9 @@ type CommonUpdate = Omit<VideoUpdate, 'previewfile' | 'originallyPublishedAt' | 
     updateAt: string
     privacy?: VideoScheduleUpdate['privacy']
   }
+
+  // Only used on creation: a short cannot be turned into a regular video and vice versa
+  isShort?: boolean
 }
 
 type LiveUpdate = Omit<LiveVideoUpdate, 'schedules'> & {
@@ -331,6 +334,7 @@ export class VideoEdit {
     this.common.name = options.name
     this.common.channelId = options.channelId
     this.common.support = options.support
+    this.common.isShort = options.isShort === true
     this.metadata.isLive = isLive
 
     this.common.privacy = serverDefaults.publish.privacy
@@ -729,7 +733,9 @@ export class VideoEdit {
     return {
       ...this.toVideoCreateOrUpdate(),
 
-      privacy: overriddenPrivacy
+      privacy: overriddenPrivacy,
+
+      isShort: this.common.isShort === true
     }
   }
 

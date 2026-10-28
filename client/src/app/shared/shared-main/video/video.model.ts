@@ -61,6 +61,7 @@ export class Video implements VideoServerModel {
   aspectRatio: number
 
   isLive: boolean
+  isShort: boolean
   liveSchedules: { startAt: Date | string }[]
 
   embedPath: string
@@ -155,6 +156,7 @@ export class Video implements VideoServerModel {
     this.description = hash.description
 
     this.isLive = hash.isLive
+    this.isShort = hash.isShort === true
     this.liveSchedules = hash.liveSchedules
       ? hash.liveSchedules.map(schedule => ({ startAt: new Date(schedule.startAt.toString()) }))
       : null

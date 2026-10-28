@@ -1,0 +1,53 @@
+<article class="short-card">
+  <div class="short-frame">
+    <div class="short-player-wrapper">
+      @if (videoDetails) {
+        <my-short-player [video]="videoDetails" [active]="active() && !commentsOpened"></my-short-player>
+      } @else {
+        <div class="short-player-loading"><my-loader></my-loader></div>
+      }
+    </div>
+
+    <div class="short-scrim" aria-hidden="true"></div>
+
+    <div class="short-overlay">
+      <div class="short-infos">
+        <a class="short-channel" [routerLink]="[ '/c', video().byVideoChannel ]">&#64;{{ video().byVideoChannel }}</a>
+        <h2 class="short-name">{{ video().name }}</h2>
+      </div>
+
+      <div class="short-actions">
+        @if (videoDetails) {
+          <my-video-rate [video]="videoDetails" [isUserLoggedIn]="isLoggedIn()"></my-video-rate>
+        }
+
+        <button
+          class="short-action" (click)="toggleComments()"
+          [attr.aria-pressed]="commentsOpened" i18n-title title="Comments"
+          >
+          <my-global-icon iconName="message-circle" aria-hidden="true"></my-global-icon>
+          @if (video().comments) {
+            <span class="short-action-count">{{ video().comments }}</span>
+          }
+        </button>
+
+        <a class="short-action" [routerLink]="getWatchUrl()" i18n-title title="Open the video page">
+          <my-global-icon iconName="film" aria-hidden="true"></my-global-icon>
+        </a>
+      </div>
+    </div>
+
+    @if (commentsOpened && videoDetails) {
+      <div class="short-comments">
+        <div class="short-comments-header">
+          <strong i18n>Comments</strong>
+          <button class="short-comments-close" (click)="toggleComments()" i18n-title title="Close comments">
+            <my-global-icon iconName="cross" aria-hidden="true"></my-global-icon>
+          </button>
+        </div>
+
+        <my-video-comments [video]="videoDetails"></my-video-comments>
+      </div>
+    }
+  </div>
+</article>

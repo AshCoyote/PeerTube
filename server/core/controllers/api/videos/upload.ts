@@ -60,6 +60,7 @@ const resumableInitMetadataFields: Record<Exclude<keyof VideoCreate, 'thumbnailf
   originallyPublishedAt: true,
   videoPasswords: true,
   generateTranscription: true,
+  isShort: true,
   pluginData: true
 }
 

@@ -132,6 +132,12 @@ export class MenuComponent implements OnInit, OnDestroy {
       ]
     }
 
+    base.links.push({
+      path: '/shorts',
+      icon: 'flame',
+      label: $localize`Shorts`
+    })
+
     if (this.loggedIn) {
       base.links.push({
         path: '/videos/subscriptions',

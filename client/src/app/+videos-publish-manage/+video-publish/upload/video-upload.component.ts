@@ -74,6 +74,7 @@ export class VideoUploadComponent implements OnInit, OnDestroy, AfterViewInit, C
 
   firstStep = true
   firstStepChannelId: number
+  firstStepIsShort = false
 
   hasFirstUpdated = false
 
@@ -228,6 +229,7 @@ export class VideoUploadComponent implements OnInit, OnDestroy, AfterViewInit, C
       channelName: channel.name,
       channelDisplayName: channel.displayName,
       support: channel.support ?? '',
+      isShort: this.firstStepIsShort,
       user: this.authService.getUser()
     })
 

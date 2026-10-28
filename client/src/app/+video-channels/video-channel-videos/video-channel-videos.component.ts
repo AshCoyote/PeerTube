@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, inject, viewChild, ChangeDetectionStrategy } from '@angular/core'
+import { ActivatedRoute } from '@angular/router'
 import { ComponentPaginationLight, DisableForReuseHook, HooksService, ScreenService } from '@app/core'
 import { VideoChannel } from '@app/shared/shared-main/channel/video-channel.model'
 import { VideoChannelService } from '@app/shared/shared-main/channel/video-channel.service'
@@ -19,6 +20,7 @@ export class VideoChannelVideosComponent implements OnInit, AfterViewInit, OnDes
   private videoChannelService = inject(VideoChannelService)
   private videoService = inject(VideoService)
   private hooks = inject(HooksService)
+  private route = inject(ActivatedRoute)
 
   readonly videosList = viewChild<VideosListComponent>('videosList')
 
@@ -63,8 +65,15 @@ export class VideoChannelVideosComponent implements OnInit, AfterViewInit, OnDes
       videoPagination: pagination,
       videoChannel: this.videoChannel,
       includeScheduledLive: true,
-      skipCount: true
+      skipCount: true,
+
+      // The channel has a dedicated tab for them
+      isShort: this.isShortsTab()
     })
+  }
+
+  isShortsTab () {
+    return this.route.snapshot.data['shortsOnly'] === true
   }
 
   getSyndicationItems () {

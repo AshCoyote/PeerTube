@@ -97,7 +97,12 @@ const getVideoUploadCommonValidator = () => [
   body('generateTranscription')
     .optional()
     .customSanitizer(toBooleanOrNull)
-    .custom(isBooleanValid).withMessage('Should have a valid generateTranscription boolean')
+    .custom(isBooleanValid).withMessage('Should have a valid generateTranscription boolean'),
+
+  body('isShort')
+    .optional()
+    .customSanitizer(toBooleanOrNull)
+    .custom(isBooleanValid).withMessage('Should have a valid isShort boolean')
 ]
 
 export const videosAddLegacyValidator = [
@@ -546,6 +551,10 @@ export const commonVideosFiltersValidatorFactory = (options: {
       .optional()
       .customSanitizer(toBooleanOrNull)
       .custom(isBooleanValid).withMessage('Should have a valid isLive boolean'),
+    query('isShort')
+      .optional()
+      .customSanitizer(toBooleanOrNull)
+      .custom(isBooleanValid).withMessage('Should have a valid isShort boolean'),
     query('includeScheduledLive')
       .optional()
       .customSanitizer(toBooleanOrNull)

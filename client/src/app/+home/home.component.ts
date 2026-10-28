@@ -3,11 +3,12 @@ import { DisableForReuseHook, PeerTubeRouterService } from '@app/core'
 import { CustomPageService } from '@app/shared/shared-main/custom-page/custom-page.service'
 import { debounceTime, fromEvent, Subscription } from 'rxjs'
 import { CustomMarkupContainerComponent } from '../shared/shared-custom-markup/custom-markup-container.component'
+import { ShortsRailComponent } from '../shared/shared-video-shorts/shorts-rail.component'
 
 @Component({
   templateUrl: './home.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [ CustomMarkupContainerComponent ]
+  imports: [ CustomMarkupContainerComponent, ShortsRailComponent ]
 })
 export class HomeComponent implements OnInit, OnDestroy, DisableForReuseHook {
   private customPageService = inject(CustomPageService)

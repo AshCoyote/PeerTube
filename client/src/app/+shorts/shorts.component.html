@@ -1,0 +1,22 @@
+<h1 class="visually-hidden" i18n>Shorts</h1>
+
+@if (loading) {
+  <div class="shorts-loading"><my-loader></my-loader></div>
+} @else if (shorts.length === 0) {
+  <div class="shorts-empty margin-content">
+    <my-global-icon iconName="film" aria-hidden="true"></my-global-icon>
+
+    <h2 i18n>No shorts yet</h2>
+    <p i18n>Shorts are short vertical videos. To publish one, pick "Short" as the video type on the upload page.</p>
+
+    <a routerLink="/videos/publish" class="peertube-button-link primary-button" i18n>Publish a short</a>
+  </div>
+} @else {
+  <div #container class="shorts-container" (scroll)="onScroll()">
+    @for (short of shorts; track short.uuid; let i = $index) {
+      <div class="short-item">
+        <my-short-card [video]="short" [active]="i === activeIndex"></my-short-card>
+      </div>
+    }
+  </div>
+}

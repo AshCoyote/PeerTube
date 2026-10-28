@@ -566,6 +566,11 @@ export class VideoModel extends SequelizeModel<VideoModel> {
   declare isLive: boolean
 
   @AllowNull(false)
+  @Default(false)
+  @Column
+  declare isShort: boolean
+
+  @AllowNull(false)
   @Is('VideoUrl', value => throwIfNotValid(value, isActivityPubUrlValid, 'url'))
   @Column(DataType.STRING(CONSTRAINTS_FIELDS.VIDEOS.URL.max))
   declare url: string
@@ -1172,6 +1177,7 @@ export class VideoModel extends SequelizeModel<VideoModel> {
         | 'nsfwFlagsIncluded'
         | 'nsfwFlagsExcluded'
         | 'isLive'
+        | 'isShort'
         | 'categoryOneOf'
         | 'licenceOneOf'
         | 'languageOneOf'
@@ -1220,6 +1226,7 @@ export class VideoModel extends SequelizeModel<VideoModel> {
         'nsfwFlagsIncluded',
         'nsfwFlagsExcluded',
         'isLive',
+        'isShort',
         'categoryOneOf',
         'licenceOneOf',
         'languageOneOf',
